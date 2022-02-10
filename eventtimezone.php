@@ -179,6 +179,28 @@ function eventtimezone_civicrm_entityTypes(&$entityTypes) {
     };
 }
 
+function get_timezone_for_event($eventID) {
+  list($zones, $zoneabbr) = get_timezones();
+  $result = civicrm_api3('Event', 'get', array(
+    'sequential' => 1,
+    'return' => array('timezone'),
+    'id' => $eventID,
+  ));
+  if (isset($result['values'][0])){
+    $timezone = $zoneabbr[$result['values'][0]['timezone']];
+  }
+  return $timezone;
+}
+
+
+function eventtimezone_civicrm_alterMailParams(&$params, $context = NULL) {
+  if ($params['valueName'] == 'event_online_receipt') {
+    if ($eventID = $params['tplParams']['event']['id']) {
+      $params['tplParams']['event']['timezone'] = get_timezone_for_event($eventID);
+    }
+  }
+}
+
 function timezone_list() {
   static $timezones = null;
   if ($timezones === null) {
