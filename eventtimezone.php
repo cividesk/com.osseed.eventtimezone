@@ -179,10 +179,50 @@ function eventtimezone_civicrm_entityTypes(&$entityTypes) {
     };
 }
 
+function timezone_list() {
+  static $timezones = null;
+  if ($timezones === null) {
+    $timezones = $offsets = [];
+    $now = new DateTime('now', new DateTimeZone('UTC'));
+
+    foreach (DateTimeZone::listIdentifiers() as $timezone) {
+      $now->setTimezone(new DateTimeZone($timezone));
+      $offsets[] = $offset = $now->getOffset();
+      $timezones[$timezone] = '(' . format_GMT_offset($offset) . ') ' . format_timezone_name($timezone);
+    }
+     array_multisort($offsets, $timezones);
+  }
+  return $timezones;
+}
+
+function format_GMT_offset($offset) {
+  $hours = intval($offset / 3600);
+  $minutes = abs(intval($offset % 3600 / 60));
+  return 'GMT' . ($offset ? sprintf('%+03d:%02d', $hours, $minutes) : '');
+}
+
+function format_timezone_name($name) {
+  $name = str_replace('/', ', ', $name);
+  $name = str_replace('_', ' ', $name);
+  $name = str_replace('St ', 'St. ', $name);
+  return $name;
+}
+
+function get_timezones() {
+  $zones = timezone_list();
+  $zoneabbr = [];
+  foreach ($zones as $t => $x) {
+    $date = new DateTime(null, new DateTimeZone($t));
+    $zoneabbr[$t] = $date->format('T');
+  }
+  return [$zones, $zoneabbr];
+}
+
 /**
  * Implements hook_civicrm_alterContent().
  */
 function eventtimezone_civicrm_alterContent( &$content, $context, $tplName, &$object ) {
+  list($zones, $zoneabbr) = get_timezones();
   $eventInfoFormContext = ($context == 'form' && $tplName == 'CRM/Event/Form/ManageEvent/EventInfo.tpl');
   $eventInfoPageContext = ($context == 'page' && $tplName == 'CRM/Event/Page/EventInfo.tpl');
   $eventConfirmFormContext = ($context == 'form' && $tplName == 'CRM/Event/Form/Registration/Confirm.tpl');
@@ -194,8 +234,8 @@ function eventtimezone_civicrm_alterContent( &$content, $context, $tplName, &$ob
       'return' => array("timezone"),
       'id' => $object->_id,
     ));
-    if(isset($result['values'][0])){
-      $timezone = $result['values'][0]['timezone'];
+    if (isset($result['values'][0])){
+      $timezone = $zoneabbr[$result['values'][0]['timezone']];
     }
 
     if($eventInfoPageContext && $timezone != '_none' && !empty($timezone)) {
@@ -206,19 +246,19 @@ function eventtimezone_civicrm_alterContent( &$content, $context, $tplName, &$ob
       $timezone_field = '<tr class="crm-event-manage-eventinfo-form-block-timezone">
       <td class="label"><label for="timezone">Timezone</label></td>
       <td>
-      <select name="timezone" id="timezone" class="crm-form-select">
-      <option value="_none">Select Timezone</option>';
-      foreach ($timezone_identifiers as $key => $value) {
-        $dateTime = new DateTime();
-        $dateTime->setTimeZone(new DateTimeZone($value));
-        $timezone_db = $dateTime->format('T');
-        $timezone_field .= '<option value="' . $timezone_db . '">' . $value . '</option>';
+      <select name="timezone" id="timezone" class="crm-form-select">';
+      if ($timezone) {
+       $timezone_field .= '<option value="'.$result['values'][0]['timezone'].'" selected="">'.$zones[$result['values'][0]['timezone']].'</option>';
+      }
+      $timezone_field .= '<option value="_none">Select Timezone</option>';
+      foreach ($zones as $name => $value) {
+        $timezone_field .= '<option value="' . $name . '">' . $value . '</option>';
       }
       $timezone_field .= '</select>
       </td>
       </tr>
-      <tr class="crm-event-manage-eventinfo-form-block-max_participants">';
-      $content = str_replace('<tr class="crm-event-manage-eventinfo-form-block-max_participants">', $timezone_field, $content);
+      <tr class="crm-event-manage-eventinfo-form-block-start_date">';
+      $content = str_replace('<tr class="crm-event-manage-eventinfo-form-block-start_date">', $timezone_field, $content);
     }
   }
   elseif ($eventConfirmFormContext || $eventConfirmPageContext) {
@@ -229,7 +269,8 @@ function eventtimezone_civicrm_alterContent( &$content, $context, $tplName, &$ob
     ));
     $event_start_date = $result['values'][0]['event_start_date'];
     $event_end_date = $result['values'][0]['event_end_date'];
-    $timezone = $result['values'][0]['timezone'];
+
+    $timezone = $zoneabbr[$result['values'][0]['timezone']];
     $start_date_con = new DateTime($event_start_date);
     $start_date_st = date_format($start_date_con, 'F jS, Y g:iA');
     $start_date = date_format($start_date_con, 'F jS');
