@@ -200,8 +200,12 @@ function get_timezone_for_event($eventID) {
 function eventtimezone_civicrm_buildForm($formName, &$form) {
   if ($formName == 'CRM_Event_Form_ManageEvent_EventInfo') {
     $timezones = timezone_list();
-    $form->addSelect('event_tz', ['options' => $timezones]);
-
+    $form->addSelect('event_tz', ['placeholder' => ts('- Select time zone -'), 'options' => $timezones, 'class' => 'huge']);
+    $eventID = $form->getVar('_id');
+    if ($eventID) {
+      $event_tz = get_timezone_for_event($eventID);
+      $form->setDefaults(array('event_tz' => 'Pacific/Tahiti'));
+    }
     // Add our template to the page. Note our template uses jQuery to reorder/change the form
     CRM_Core_Region::instance('page-body')->add(array('template' => 'timezone.tpl'));
   }
