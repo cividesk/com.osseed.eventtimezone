@@ -193,6 +193,20 @@ function get_timezone_for_event($eventID) {
 }
 
 
+
+/**
+ * Implementation of hook_civicrm_buildForm
+ */
+function eventtimezone_civicrm_buildForm($formName, &$form) {
+  if ($formName == 'CRM_Event_Form_ManageEvent_EventInfo') {
+    $timezones = timezone_list();
+    $form->addSelect('event_tz', ['options' => $timezones]);
+
+    // Add our template to the page. Note our template uses jQuery to reorder/change the form
+    CRM_Core_Region::instance('page-body')->add(array('template' => 'timezone.tpl'));
+  }
+}
+
 function eventtimezone_civicrm_alterMailParams(&$params, $context = NULL) {
   if ($params['valueName'] == 'event_online_receipt') {
     if ($eventID = $params['tplParams']['event']['id']) {
