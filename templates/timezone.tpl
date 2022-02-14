@@ -1,8 +1,8 @@
 <div class="crm-block crm-form-block crm-event-manage-eventinfo-form-block">
 <table class="form-layout-compressed">
  <tr class="crm-event-manage-eventinfo-form-block-event_tz">
-    <td class="label">{$form.event_tz.label}</td>
-    <td>{$form.event_tz.html}</td>
+    <td class="label">{$form.timezone.label}</td>
+    <td>{$form.timezone.html}</td>
  </tr>
 </table>
 </div>
