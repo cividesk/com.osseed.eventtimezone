@@ -129,7 +129,6 @@ function eventtimezone_civicrm_alterSettingsFolders(&$metaDataFolders = NULL) {
 function eventtimezone_civicrm_postProcess($formName, &$form) {
   if ($formName == 'CRM_Event_Form_ManageEvent_EventInfo') {
     $submit = $form->getVar('_submitValues');
-    //crm_Core_error::Debug('s', $submit);exit;
     $timezone = $submit['timezone'];
     if (empty($form->_id) && !empty($submit['timezone'])) {
       $result = civicrm_api3('Event', 'get', array(
@@ -146,7 +145,7 @@ function eventtimezone_civicrm_postProcess($formName, &$form) {
         SET timezone = '$timezone'
         WHERE id = $event_id
 ";
-//     crm_Core_error::Debug('s', $query);exit;
+
         CRM_Core_DAO::executeQuery($query);
       }
     }
@@ -212,6 +211,9 @@ function eventtimezone_civicrm_buildForm($formName, &$form) {
   }
 }
 
+/**
+ * Implementation of hook_civicrm_alterMailParams
+ */
 function eventtimezone_civicrm_alterMailParams(&$params, $context = NULL) {
   if ($params['valueName'] == 'event_online_receipt') {
     if ($eventID = $params['tplParams']['event']['id']) {
@@ -250,14 +252,17 @@ function format_timezone_name($name) {
   return $name;
 }
 
+/*
+ * get abbreviation for the given timezone
+ *
+ */
 function get_timezone_abbr($timezone) {
   if (!$timezone) {
     return ;
   }
-  $date = new DateTime(null, new DateTimeZone($timezone));
-  $timezoneAbbr = $date->format('T');
 
-  return $timezoneAbbr;
+  $date = new DateTime(null, new DateTimeZone($timezone));
+  return $date->format('T');
 }
 
 /**

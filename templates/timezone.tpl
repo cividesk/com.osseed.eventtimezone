@@ -11,6 +11,6 @@
   // Move timezone block before event start date
   //alert(cj('.crm-event-manage-eventinfo-form-block-event_tz').length);
   cj('.crm-event-manage-eventinfo-form-block-event_tz').insertAfter('.crm-event-manage-eventinfo-form-block-description');
-  cj('.crm-event-manage-eventinfo-form-block-event_tz:eq(1)').hide();
+  cj('.crm-event-manage-eventinfo-form-block-event_tz:eq(1)').remove();
 </script>
 {/literal}
