@@ -18,7 +18,7 @@
   <compatibility>
     <ver>4.7</ver>
   </compatibility>
-  <comments>Show timezones list while creating events</comments>
+  <comments>Cividesk Customization for showing timezones list while creating events</comments>
   <civix>
     <namespace>CRM/Eventtimezone</namespace>
   </civix>
