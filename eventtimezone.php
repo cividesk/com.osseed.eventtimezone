@@ -241,45 +241,45 @@ function timezone_list() {
 
 function tz_lookup() {
   $tz = [
-   'GMT' => 'Greenwich Mean Time (GMT)',
-   'GMT+01:00' => 'Central European Time (CET)',
-   'GMT+02:00' => 'Eastern European Time (EET)',
-   'GMT+03:00' => 'Moscow Time (MSK)',
+// 'GMT' => 'Greenwich Mean Time (GMT)',
+// 'GMT+01:00' => 'Central European Time (CET)',
+// 'GMT+02:00' => 'Eastern European Time (EET)',
+// 'GMT+03:00' => 'Moscow Time (MSK)',
 // 'GMT+03:30' => (GMT+03:30) Asia, Tehran
-   'GMT+04:00' => 'Armenia Time (AMT)',
+// 'GMT+04:00' => 'Armenia Time (AMT)',
 // 'GMT+04:30' => (GMT+04:30) Asia, Kabul
-   'GMT+05:00' => 'Pakistan Standard Time (PKT)',
+// 'GMT+05:00' => 'Pakistan Standard Time (PKT)',
 // 'GMT+05:30' => (GMT+05:30) Asia, Kolkata
 // 'GMT+05:45' => (GMT+05:45) Asia, Kathmandu
-   'GMT+06:00' => 'Omsk Time (OMSK)',
+// 'GMT+06:00' => 'Omsk Time (OMSK)',
 // 'GMT+06:30' => 'Kranoyask Time (KRAT)',
-   'GMT+07:00' => 'Kranoyask Time (KRAT)',
-   'GMT+08:00' => 'China Standard Time (CST)',
+// 'GMT+07:00' => 'Kranoyask Time (KRAT)',
+// 'GMT+08:00' => 'China Standard Time (CST)',
 // 'GMT+08:45' => (GMT+08:45) Australia, Eucla
-   'GMT+09:00' => 'Japan Standard Time (JST)',
+// 'GMT+09:00' => 'Japan Standard Time (JST)',
 // 'GMT+09:30' => (GMT+09:30) Australia, Darwin
-   'GMT+10:00' => 'Eastern Australia Standard Time (AEST)',
+// 'GMT+10:00' => 'Eastern Australia Standard Time (AEST)',
 // 'GMT+10:30' => (GMT+10:30) Australia, Broken Hill
-   'GMT+11:00' => 'Sakhalin Time (SAKT)',
-   'GMT+12:00' => 'New Zealand Standard Time (NZST)',
+// 'GMT+11:00' => 'Sakhalin Time (SAKT)',
+// 'GMT+12:00' => 'New Zealand Standard Time (NZST)',
 // 'GMT+13:00' => (GMT+13:00) Pacific, Tongatapu
 // 'GMT+13:45' => (GMT+13:45) Pacific, Chatham
 // 'GMT+14:00' => (GMT+14:00) Pacific, Kiritimati
-   'GMT-01:00' => 'West Africa Time (WAT)',
-   'GMT-02:00' => 'Azores Time (AT)',
-   'GMT-03:00' => 'Argentina Time (ART)',
+// 'GMT-01:00' => 'West Africa Time (WAT)',
+// 'GMT-02:00' => 'Azores Time (AT)',
+// 'GMT-03:00' => 'Argentina Time (ART)',
 // 'GMT-03:30' => (GMT-03:30) America, St. Johns
-   'GMT-04:00' => 'Atlantic Standard Time (AST)',
+// 'GMT-04:00' => 'Atlantic Standard Time (AST)',
 //osticket 10143 : remove standard from EST
 // so people don't worry when it's daylight savings time.
    'GMT-05:00' => 'Eastern Time (ET)',
-   'GMT-06:00' => 'Central Standard Time (CST)',
-   'GMT-07:00' => 'Mountain Standard Time (MST)',
-   'GMT-08:00' => 'Pacific Standard Time (PST)',
-   'GMT-09:00' => 'Alaska Standard Time (AKST)',
+   'GMT-06:00' => 'Central Time (CT)',
+   'GMT-07:00' => 'Mountain Time (MT)',
+   'GMT-08:00' => 'Pacific Time (PT)',
+// 'GMT-09:00' => 'Alaska Standard Time (AKST)',
 // 'GMT-09:30' => (GMT-09:30) Pacific, Marquesas
-   'GMT-10:00' => 'Hawaii Standard Time (HST)',
-   'GMT-11:00' => 'Nome Time (NT)',
+// 'GMT-10:00' => 'Hawaii Standard Time (HST)',
+// 'GMT-11:00' => 'Nome Time (NT)',
   ];
 
   return $tz;
