@@ -198,7 +198,7 @@ function get_timezone_for_events($eventID) {
  */
 function eventtimezone_civicrm_buildForm($formName, &$form) {
   if ($formName == 'CRM_Event_Form_ManageEvent_EventInfo') {
-    $timezones = timezone_list();
+    $timezones = tz_lookup();
     $form->addSelect('timezone', ['placeholder' => ts('- Select time zone -'), 'options' => $timezones, 'class' => 'huge']);
     $eventID = $form->getVar('_id');
     if ($eventID) {
@@ -239,6 +239,50 @@ function timezone_list() {
   return $timezones;
 }
 
+function tz_lookup() {
+  $tz = [
+   'GMT' => 'Greenwich Mean Time (GMT)',
+   'GMT+01:00' => 'Central European Time (CET)',
+   'GMT+02:00' => 'Eastern European Time (EET)',
+   'GMT+03:00' => 'Moscow Time (MSK)',
+// 'GMT+03:30' => (GMT+03:30) Asia, Tehran
+   'GMT+04:00' => 'Armenia Time (AMT)',
+// 'GMT+04:30' => (GMT+04:30) Asia, Kabul
+   'GMT+05:00' => 'Pakistan Standard Time (PKT)',
+// 'GMT+05:30' => (GMT+05:30) Asia, Kolkata
+// 'GMT+05:45' => (GMT+05:45) Asia, Kathmandu
+   'GMT+06:00' => 'Omsk Time (OMSK)',
+// 'GMT+06:30' => 'Kranoyask Time (KRAT)',
+   'GMT+07:00' => 'Kranoyask Time (KRAT)',
+   'GMT+08:00' => 'China Standard Time (CST)',
+// 'GMT+08:45' => (GMT+08:45) Australia, Eucla
+   'GMT+09:00' => 'Japan Standard Time (JST)',
+// 'GMT+09:30' => (GMT+09:30) Australia, Darwin
+   'GMT+10:00' => 'Eastern Australia Standard Time (AEST)',
+// 'GMT+10:30' => (GMT+10:30) Australia, Broken Hill
+   'GMT+11:00' => 'Sakhalin Time (SAKT)',
+   'GMT+12:00' => 'New Zealand Standard Time (NZST)',
+// 'GMT+13:00' => (GMT+13:00) Pacific, Tongatapu
+// 'GMT+13:45' => (GMT+13:45) Pacific, Chatham
+// 'GMT+14:00' => (GMT+14:00) Pacific, Kiritimati
+   'GMT-01:00' => 'West Africa Time (WAT)',
+   'GMT-02:00' => 'Azores Time (AT)',
+   'GMT-03:00' => 'Argentina Time (ART)',
+// 'GMT-03:30' => (GMT-03:30) America, St. Johns
+   'GMT-04:00' => 'Atlantic Standard Time (AST)',
+   'GMT-05:00' => 'Eastern Standard Time (EST)',
+   'GMT-06:00' => 'Central Standard Time (CST)',
+   'GMT-07:00' => 'Mountain Standard Time (MST)',
+   'GMT-08:00' => 'Pacific Standard Time (PST)',
+   'GMT-09:00' => 'Alaska Standard Time (AKST)',
+// 'GMT-09:30' => (GMT-09:30) Pacific, Marquesas
+   'GMT-10:00' => 'Hawaii Standard Time (HST)',
+   'GMT-11:00' => 'Nome Time (NT)',
+  ];
+
+  return $tz;
+}
+
 function format_GMT_offset($offset) {
   $hours = intval($offset / 3600);
   $minutes = abs(intval($offset % 3600 / 60));
@@ -260,9 +304,12 @@ function get_timezone_abbr($timezone) {
   if (!$timezone) {
     return ;
   }
-
-  $date = new DateTime(null, new DateTimeZone($timezone));
-  return $date->format('T');
+  $all_tz = tz_lookup();
+  $tz = $all_tz[$timezone];
+  if (preg_match('!\(([^\)]+)\)!', $all_tz[$tz], $match)) {
+    $timezone = $match[1];
+  }
+  return $timezone;
 }
 
 /**
@@ -276,7 +323,6 @@ function eventtimezone_civicrm_alterContent( &$content, $context, $tplName, &$ob
   if ($eventInfoPageContext) {
     $event_tz = get_timezone_for_events($object->_id);
     $timezone = get_timezone_abbr($event_tz);
-
     if($eventInfoPageContext && $timezone != '_none' && !empty($timezone)) {
       // Add timezone besides the date data
       $content = str_replace("</abbr>", " " . $timezone . " </abbr>", $content);
@@ -290,8 +336,15 @@ function eventtimezone_civicrm_alterContent( &$content, $context, $tplName, &$ob
     ));
     $event_start_date = $result['values'][0]['event_start_date'];
     $event_end_date = $result['values'][0]['event_end_date'];
+    $event_tz = get_timezone_for_events($object->_eventId);
+    $all_tz = tz_lookup();
+    $timezone = $all_tz[$event_tz];
+    $match = [];
+    if (preg_match('!\(([^\)]+)\)!', $all_tz[$event_tz], $match)) {
+      $timezone = $match[1];
+    }
 
-    $timezone = get_timezone_abbr($result['values'][0]['timezone']);
+    //$timezone = get_timezone_abbr($result['values'][0]['timezone']);
     $start_date_con = new DateTime($event_start_date);
     $start_date_st = date_format($start_date_con, 'F jS, Y g:iA');
     $start_date = date_format($start_date_con, 'F jS');
