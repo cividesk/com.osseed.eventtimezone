@@ -306,10 +306,10 @@ function get_timezone_abbr($timezone) {
   }
   $all_tz = tz_lookup();
   $tz = $all_tz[$timezone];
-  if (preg_match('!\(([^\)]+)\)!', $all_tz[$tz], $match)) {
-    $timezone = $match[1];
+  if (preg_match('!\(([^\)]+)\)!', $tz, $match)) {
+    $abbr = $match[1];
   }
-  return $timezone;
+  return $abbr;
 }
 
 /**
