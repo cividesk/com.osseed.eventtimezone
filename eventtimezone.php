@@ -270,7 +270,9 @@ function tz_lookup() {
    'GMT-03:00' => 'Argentina Time (ART)',
 // 'GMT-03:30' => (GMT-03:30) America, St. Johns
    'GMT-04:00' => 'Atlantic Standard Time (AST)',
-   'GMT-05:00' => 'Eastern Standard Time (EST)',
+//osticket 10143 : remove standard from EST
+// so people don't worry when it's daylight savings time.
+   'GMT-05:00' => 'Eastern Time (ET)',
    'GMT-06:00' => 'Central Standard Time (CST)',
    'GMT-07:00' => 'Mountain Standard Time (MST)',
    'GMT-08:00' => 'Pacific Standard Time (PST)',
