@@ -278,7 +278,7 @@ function tz_lookup() {
    'GMT-08:00' => 'Pacific Time (PT)',
 // 'GMT-09:00' => 'Alaska Standard Time (AKST)',
 // 'GMT-09:30' => (GMT-09:30) Pacific, Marquesas
-// 'GMT-10:00' => 'Hawaii Standard Time (HST)',
+   'GMT-10:00' => 'Hawaii Standard Time (HST)',
 // 'GMT-11:00' => 'Nome Time (NT)',
   ];
 
