@@ -130,6 +130,9 @@ function eventtimezone_civicrm_postProcess($formName, &$form) {
   if ($formName == 'CRM_Event_Form_ManageEvent_EventInfo') {
     $submit = $form->getVar('_submitValues');
     $timezone = $submit['timezone'];
+    if (empty($timezone)) {
+      return;
+    }
     if (empty($form->_id) && !empty($submit['timezone'])) {
       $result = civicrm_api3('Event', 'get', array(
         'sequential' => 1,
