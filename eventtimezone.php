@@ -190,7 +190,7 @@ function get_timezone_for_events($eventID) {
     'id' => $eventID,
   ));
 
-  if (isset($result['values'][0])){
+  if (isset($result['values'][0]['timezone'])){
     return $result['values'][0]['timezone'];
   }
   return;
